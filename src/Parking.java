@@ -9,37 +9,29 @@ public class Parking {
     }
 
     public synchronized int aparcar(int matricula) {
-
-        while (libres == 0) {
+        while (true) {
+            int plaza = buscarLibre();
+            if (plaza != -1) {
+                plazas[plaza] = matricula;
+                libres--;
+                System.out.println("El coche con matricula: " + matricula + " aparca en la plaza " + plaza);
+                notifyAll();
+                return plaza;
+            }
             try {
-                wait(espera);
+                wait(); // si no hay plaza, espera hasta que alguien salga
             } catch (InterruptedException e) {
-                System.out.println("Error al aparcar: " + e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
-        int plaza = buscarLibre();
-        plazas[plaza] = matricula;
-        libres--;
-
-        System.out.println("El coche con matricula: " + matricula + " acaba de aparcar en la plaza " + plazas[plaza] );
-
-        notifyAll();
-        return plaza;
     }
 
     public synchronized void salir (int matricula, int plaza) {
-        while (plazas[plaza] != matricula){
-            try {
-                wait(espera);
-            } catch (InterruptedException e) {
-                System.out.println("Error en salir: " + e.getMessage());
-            }
-        }
         plazas[plaza] = 0;
         libres++;
-        System.out.println("El coche con matricula: " + matricula + " acaba de salir: " + plazas[plaza] );
-        notifyAll();
 
+        System.out.println("El coche con matricula: " + matricula + " acaba de salir: " + plaza );
+        notifyAll();
     }
 
     private int buscarLibre() {
