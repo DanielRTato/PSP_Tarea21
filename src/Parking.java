@@ -9,22 +9,25 @@ public class Parking {
     }
 
     public synchronized int aparcar(int matricula) {
-        while (true) {
+        while (libres == 0) {  // En teoria si no quedan plazas libres espera
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return -1;
+            }
+        }
             int plaza = buscarLibre();
             if (plaza != -1) {
                 plazas[plaza] = matricula;
                 libres--;
                 System.out.println("El coche con matricula: " + matricula + " aparca en la plaza " + plaza);
-                notifyAll();
-                return plaza;
+                //notifyAll();
             }
-            try {
-                wait(); // si no hay plaza, espera hasta que alguien salga
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        return plaza;
+
     }
+
 
     public synchronized void salir (int matricula, int plaza) {
         plazas[plaza] = 0;

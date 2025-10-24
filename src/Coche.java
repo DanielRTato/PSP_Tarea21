@@ -15,6 +15,7 @@ public class Coche extends Thread{
     public void run() {
         while (true) {
             int plaza = parking.aparcar(matricula);
+
             try {
                 Thread.sleep(espera);
             } catch (InterruptedException e) {

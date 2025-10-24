@@ -1,8 +1,8 @@
 public class Main {
     public static void main(String[] args) {
 
-        int capacidadParking = 2;
-        int cantidadCoches = 11;
+        int capacidadParking = 3;
+        int cantidadCoches = 7;
 
         Parking parking = new Parking(capacidadParking);
 
@@ -17,7 +17,7 @@ public class Main {
 
         //c1.start(); c2.start(); c3.start(); c4.start(); c5.start(); c6.start(); c7.start(); c8.start();
 
-        for (int i = 0; i < cantidadCoches; i++){
+        for (int i = 1; i < cantidadCoches; i++){
             Coche coche = new Coche(i, parking);
             coche.start();
         }
